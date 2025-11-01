@@ -10,8 +10,7 @@
 #pragma comment(lib, "Dwmapi.lib")
 
 int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
-                      _In_ wchar_t *command_line, _In_ int show_command)
-{
+                      _In_ wchar_t *command_line, _In_ int show_command) {
   if (!::AttachConsole(ATTACH_PARENT_PROCESS) && ::IsDebuggerPresent()) {
     CreateAndAttachConsole();
   }
@@ -20,28 +19,33 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
 
   flutter::DartProject project(L"data");
 
-  std::vector<std::string> command_line_arguments =
-      GetCommandLineArguments();
-
+  std::vector<std::string> command_line_arguments = GetCommandLineArguments();
   project.set_dart_entrypoint_arguments(std::move(command_line_arguments));
 
   FlutterWindow window(project);
-  Win32Window::Point origin(10, 10);
-  Win32Window::Size size(1280, 720);
-  if (!window.Create(L"flutter_application_1", origin, size)) {
+  Win32Window::Point origin(50, 50);
+  Win32Window::Size size(900, 600);
+  if (!window.Create(L"Blue Transparent Flutter Window", origin, size)) {
     return EXIT_FAILURE;
   }
 
   HWND hwnd = window.GetHandle();
-  LONG style = GetWindowLong(hwnd, GWL_EXSTYLE);
-  SetWindowLong(hwnd, GWL_EXSTYLE, style | WS_EX_LAYERED);
-  SetLayeredWindowAttributes(hwnd, 0, 255, LWA_ALPHA);
+  if (hwnd) {
+    const MARGINS margins = { -1 };
+    DwmExtendFrameIntoClientArea(hwnd, &margins);
 
-  DWM_BLURBEHIND blurBehind = {0};
-  blurBehind.dwFlags = DWM_BB_ENABLE;
-  blurBehind.fEnable = TRUE;
-  blurBehind.hRgnBlur = NULL;
-  DwmEnableBlurBehindWindow(hwnd, &blurBehind);
+    LONG style = GetWindowLong(hwnd, GWL_EXSTYLE);
+    SetWindowLong(hwnd, GWL_EXSTYLE, style | WS_EX_LAYERED);
+    COLORREF blueColor = RGB(0, 120, 215); 
+    BYTE alpha = 200; 
+    SetLayeredWindowAttributes(hwnd, blueColor, alpha, LWA_COLORKEY | LWA_ALPHA);
+
+    DWM_BLURBEHIND blurBehind = {0};
+    blurBehind.dwFlags = DWM_BB_ENABLE;
+    blurBehind.fEnable = TRUE;
+    blurBehind.hRgnBlur = NULL;
+    DwmEnableBlurBehindWindow(hwnd, &blurBehind);
+  }
 
   window.SetQuitOnClose(true);
   window.Show();

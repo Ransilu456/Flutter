@@ -1,61 +1,63 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 
 void main() {
-  runApp(const TransparentApp());
+  runApp(const BlueTransparentApp());
 
   doWhenWindowReady(() {
     appWindow.alignment = Alignment.center;
-    appWindow.size = const Size(800, 600);
-    appWindow.title = "Transparent Window";
+    appWindow.size = const Size(900, 600);
+    appWindow.title = "Blue Transparent Flutter Window";
     appWindow.show();
   });
 }
 
-class TransparentApp extends StatelessWidget {
-  const TransparentApp({super.key});
+class BlueTransparentApp extends StatelessWidget {
+  const BlueTransparentApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const TransparentWindow(),
+      theme: ThemeData(useMaterial3: true),
+      home: const BlueWindow(),
     );
   }
 }
 
-class TransparentWindow extends StatelessWidget {
-  const TransparentWindow({super.key});
+class BlueWindow extends StatelessWidget {
+  const BlueWindow({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:
-          Colors.transparent,
+      backgroundColor: Colors.transparent, 
       body: WindowBorder(
         color: Colors.transparent,
         width: 0,
         child: Stack(
+          fit: StackFit.expand,
           children: [
-            Align(
-              alignment: Alignment.center,
+            Center(
               child: Container(
-                width: 300,
-                height: 200,
+                width: 320,
+                height: 180,
                 decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.5),
+                  color: Colors.white.withOpacity(0.15),
                   borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: Colors.white.withOpacity(0.3)),
                   boxShadow: const [
                     BoxShadow(
                       color: Colors.black26,
                       blurRadius: 20,
-                      spreadRadius: 5,
+                      spreadRadius: 2,
                     ),
                   ],
                 ),
                 child: const Center(
                   child: Text(
-                    "Transparent Window",
+                    "Blue Transparent Window",
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 22,
