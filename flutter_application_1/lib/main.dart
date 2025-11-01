@@ -32,7 +32,7 @@ class BlueWindow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent, 
+      backgroundColor: const Color.fromARGB(94, 255, 255, 255), 
       body: WindowBorder(
         color: Colors.transparent,
         width: 0,
